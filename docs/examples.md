@@ -1,6 +1,18 @@
 # Examples
 
-The [`examples/`](https://github.com/opensemanticworld/osw-selenium/tree/main/examples) directory contains runnable scripts demonstrating common use cases.
+The [`examples/`](https://github.com/opensemanticworld/osw-selenium/tree/main/examples)
+directory contains runnable scripts demonstrating common use cases.
+Each example has a corresponding test in
+[`tests/examples/`](https://github.com/opensemanticworld/osw-selenium/tree/main/tests/examples)
+to ensure examples stay valid.
+
+:::{admonition} Prerequisites
+:class: note
+
+All examples except "Basic Configuration" and "Schema Path Utilities"
+require `MW_SITE_SERVER` and `MW_ADMIN_PASS` environment variables
+pointing to a running OSL instance.
+:::
 
 ## Basic Configuration
 
@@ -41,7 +53,7 @@ try:
 
     driver.get(config.base_url.rstrip("/") + "/wiki/Main_Page")
     if "Main Page" in driver.page_source:
-        print("Login successful — Main Page loaded.")
+        print("Login successful -- Main Page loaded.")
 finally:
     driver.quit()
 ```
@@ -73,6 +85,7 @@ checkbox_id = schema_path_to_property_checkbox_id("root.orderer")
 ## Create ELN Entry
 
 Create an ELN entry with inline organization and person references.
+This example demonstrates the full JSON editor workflow.
 
 ```python
 from osw_selenium.config import OSWConfig
@@ -93,9 +106,26 @@ try:
         category="Category:OSW0e7fab2262fb4427ad0fa454bc868a0d"
     )
 
-    # Fill fields
+    # Fill the label
     editor.fill_editor_field(schemapath="root.label.0.text", value="My ELN entry")
-    editor.save_editor()
+
+    # Add orderer via inline editor (opens nested form)
+    editor.add_additional_property(schemapath="root.orderer")
+    editor.fill_editor_field(schemapath="root.orderer", value="")
+    editor.create_inline(schemapath="root.orderer")           # level 0 -> 1
+    editor.fill_editor_field(schemapath="root.label.0.text", value="Test Org")
+    editor.save_editor()                                      # level 1 -> 0
+
+    # Save the main form
+    editor.save_editor()                                      # level 0 -> -1
 finally:
     driver.quit()
 ```
+
+:::{admonition} Editor levels
+:class: tip
+
+Notice how `create_inline()` opens a nested editor and `save_editor()`
+closes it. The `JsonEditorPage` tracks this automatically via its
+internal `_editor_level`. See {doc}`architecture` for the state machine diagram.
+:::

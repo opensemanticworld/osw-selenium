@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <!-- Browser window frame -->
+  <rect x="2" y="2" width="36" height="36" rx="4" ry="4" fill="none" stroke="#2962ff" stroke-width="2.5"/>
+  <!-- Address bar line -->
+  <line x1="2" y1="12" x2="38" y2="12" stroke="#2962ff" stroke-width="2"/>
+  <!-- Dots in title bar -->
+  <circle cx="8" cy="7" r="1.5" fill="#2962ff"/>
+  <circle cx="13" cy="7" r="1.5" fill="#2962ff"/>
+  <circle cx="18" cy="7" r="1.5" fill="#2962ff"/>
+  <!-- Checkmark -->
+  <polyline points="13,24 18,30 28,18" fill="none" stroke="#2962ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

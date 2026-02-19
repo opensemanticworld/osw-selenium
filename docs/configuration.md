@@ -7,7 +7,7 @@ Set these environment variables or use a `.env` file (loaded automatically via `
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
 | `MW_SITE_SERVER` | Yes | `http://localhost` | Base URL of the OSL/MediaWiki instance |
-| `MW_ADMIN_PASS` | Yes | — | Admin password |
+| `MW_ADMIN_PASS` | Yes | -- | Admin password |
 | `OSW_BROWSER` | No | `chrome` | `chrome` or `firefox` |
 | `OSW_HEADLESS` | No | `false` | `true` for headless mode (CI pipelines) |
 
@@ -21,6 +21,13 @@ MW_ADMIN_PASS=my-secret-password
 OSW_BROWSER=chrome
 OSW_HEADLESS=false
 ```
+
+:::{admonition} Security
+:class: warning
+
+Never commit `.env` files containing real passwords to version control.
+Add `.env` to your `.gitignore`.
+:::
 
 ## OSWConfig
 
@@ -54,14 +61,61 @@ config = OSWConfig(
 | `window_height` | `int` | `1024` | Browser window height |
 | `accept_insecure_certs` | `bool` | `True` | Accept self-signed TLS |
 
+## Browser Setup
+
+::::{tab-set}
+
+:::{tab-item} Chrome
+Chrome is the default browser. In headless mode, osw-selenium
+uses `--headless=new` (Chrome's modern headless mode), along with
+`--no-sandbox` and `--disable-dev-shm-usage` for CI compatibility.
+
+```python
+config = OSWConfig(browser="chrome", headless=True)
+driver = create_driver(config)
+```
+:::
+
+:::{tab-item} Firefox
+Firefox uses `--headless` for headless mode. Window size is set
+via `set_window_size()` after driver creation.
+
+```python
+config = OSWConfig(browser="firefox", headless=True)
+driver = create_driver(config)
+```
+:::
+
+::::
+
 ## CI Pipeline Usage
 
-For CI pipelines (GitHub Actions, GitLab CI), set `OSW_HEADLESS=true`:
+::::{tab-set}
 
+:::{tab-item} GitHub Actions
 ```yaml
-# GitHub Actions example
 env:
   MW_SITE_SERVER: ${{ secrets.MW_SITE_SERVER }}
   MW_ADMIN_PASS: ${{ secrets.MW_ADMIN_PASS }}
   OSW_HEADLESS: "true"
 ```
+:::
+
+:::{tab-item} GitLab CI
+```yaml
+variables:
+  MW_SITE_SERVER: $MW_SITE_SERVER
+  MW_ADMIN_PASS: $MW_ADMIN_PASS
+  OSW_HEADLESS: "true"
+```
+:::
+
+::::
+
+:::{admonition} Integration test auto-skip
+:class: note
+
+When `MW_SITE_SERVER` is not set, integration tests are automatically
+skipped. This means `make test` passes locally even without a running
+OSW instance.
+:::

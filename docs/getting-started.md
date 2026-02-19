@@ -2,17 +2,30 @@
 
 ## Installation
 
-Using [uv](https://docs.astral.sh/uv/) (recommended):
+::::{tab-set}
 
+:::{tab-item} uv (recommended)
 ```bash
 uv add osw-selenium
 ```
+:::
 
-Using pip:
-
+:::{tab-item} pip
 ```bash
 pip install osw-selenium
 ```
+:::
+
+::::
+
+:::{admonition} Requirements
+:class: note
+
+- Python 3.10 -- 3.14
+- Chrome or Firefox installed on the host machine
+- No Docker, webdriver-manager, or manual driver downloads needed --
+  Selenium 4.6+ handles driver binaries automatically.
+:::
 
 ## Basic Usage
 
@@ -50,6 +63,14 @@ def test_create_entry(json_editor):
     json_editor.fill_editor_field(schemapath="root.label.0.text", value="Test")
     json_editor.save_editor()
 ```
+
+:::{admonition} Where do fixtures come from?
+:class: tip
+
+The fixtures (`osw_config`, `driver`, `logged_in_driver`, `login_page`,
+`json_editor`) are defined in `tests/conftest.py`. Copy this file into your
+project's `tests/` directory. See {doc}`concepts` for the fixture hierarchy.
+:::
 
 ## Development Setup
 
