@@ -57,16 +57,14 @@ _NOTIFICATION_JS_TEMPLATE = """
 """
 
 _IS_IN_VIEWPORT_JS = """
-(function() {
-    var el = arguments[0];
-    var rect = el.getBoundingClientRect();
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-})();
+var el = arguments[0];
+var rect = el.getBoundingClientRect();
+return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+);
 """
 
 

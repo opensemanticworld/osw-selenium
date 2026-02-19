@@ -40,6 +40,8 @@ dev = [
     "sphinx-copybutton",
     "sphinx-autodoc-typehints",
     "myst-parser",
+    "sphinx-design",
+    "sphinxcontrib-mermaid",
 ]
 
 [build-system]

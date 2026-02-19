@@ -31,23 +31,9 @@ try:
     # Fill the label
     editor.fill_editor_field(schemapath="root.label.0.text", value="Test label")
 
-    # Add and fill orderer via inline organization
+    # Add orderer and select via autocomplete
     editor.add_additional_property(schemapath="root.orderer")
-    editor.fill_editor_field(schemapath="root.orderer", value="")
-    editor.create_inline(schemapath="root.orderer")
-    editor.fill_editor_field(schemapath="root.label.0.text", value="Test Org")
-    editor.save_editor()
-    editor.assert_field_has_value(schemapath="root.orderer", expected="Test Org")
-
-    # Add actionees array with an inline person
-    editor.add_additional_property(schemapath="root.actionees")
-    editor.add_array_element(schemapath="root.actionees")
-    editor.fill_editor_field(schemapath="root.actionees.0", value="")
-    editor.create_inline(schemapath="root.actionees.0")
-    editor.fill_editor_field(schemapath="root.first_name", value="Jane")
-    editor.fill_editor_field(schemapath="root.surname", value="Doe")
-    editor.save_editor()
-    editor.assert_field_has_value(schemapath="root.actionees.0", expected="Jane Doe")
+    editor.select_autocomplete_result(schemapath="root.orderer", input_text="Andreas", index=0)
 
     # Save the main form
     editor.save_editor()

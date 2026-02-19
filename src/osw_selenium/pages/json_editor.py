@@ -177,10 +177,11 @@ class JsonEditorPage(BasePage):
             index: Zero-based index of the autocomplete result to select.
             input_text: Optional text to type to trigger autocomplete.
         """
-        field_selector = f'#{self._editor_id} [data-schemapath="{schemapath}"]'
-        self.scroll_and_click((By.CSS_SELECTOR, field_selector))
+        name = schema_path_to_name(schemapath)
+        input_locator = (By.CSS_SELECTOR, f'#{self._editor_id} [name="{name}"]')
+        self.scroll_and_click(input_locator)
         if input_text is not None:
-            self.find_element((By.CSS_SELECTOR, field_selector)).send_keys(input_text)
+            self.find_element(input_locator).send_keys(input_text)
         self.wait(5)
         result_selector = f'#{self._editor_id} [data-schemapath="{schemapath}"] #autocomplete-result-{index}'
         self.scroll_and_click((By.CSS_SELECTOR, result_selector))
@@ -191,35 +192,21 @@ class JsonEditorPage(BasePage):
     def save_editor(self) -> None:
         """Save the current editor level.
 
-        Collapses the editor, clicks the primary action button in the OOUI
-        dialog, handles confirmation modals, and dismisses notifications.
+        Clicks the save button in the Bootstrap modal footer, waits for the
+        modal to close, and dismisses notifications.
         """
-        self.add_notification(text="Save your changes")
-
-        # Collapse the editor by clicking its level-1 card title
-        self.find_element((By.CSS_SELECTOR, f"#{self._editor_id} .card-title.level-1")).click()
-
-        # Click the primary action button via XPath (1-based index)
-        primary_xpath = (
-            f'(//*[@class="je-ready"])[{self._editor_level + 1}]'
-            '/ancestor::*[contains(@class,"oo-ui-window-content")]'
-            '//*[contains(@class,"oo-ui-processDialog-actions-primary")]'
-            '//*[contains(@class,"oo-ui-buttonElement-button")]'
-        )
-        self.scroll_and_click((By.XPATH, primary_xpath))
-
-        # Handle confirmation dialog if present
-        if self.count_visible_elements(".oo-ui-messageDialog-content") > 0:
-            ok_button_xpath = (
-                '(//*[contains(@class,"oo-ui-messageDialog-content")]//*[@class="oo-ui-buttonElement-button"])[2]'
-            )
-            self.scroll_and_click((By.XPATH, ok_button_xpath))
-
-        # Wait for the current editor to disappear
         if self._editor_id is None:
             msg = "No editor is open (editor_id is None)."
             raise RuntimeError(msg)
-        self.wait_for_invisible((By.ID, self._editor_id), timeout=10)
+
+        self.add_notification(text="Save your changes")
+
+        modal_id = f"dataEditorModal_{self._editor_id}"
+        save_locator = (By.CSS_SELECTOR, f"#{modal_id} .modal-footer button.btn-primary")
+        self.scroll_and_click(save_locator)
+
+        # Wait for the modal to close
+        self.wait_for_invisible((By.ID, modal_id), timeout=30)
         self._decrement_editor_level()
         self.wait(1)
 
@@ -228,20 +215,16 @@ class JsonEditorPage(BasePage):
 
     def cancel_editor(self) -> None:
         """Cancel the current editor level without saving."""
-        # Click the safe (cancel) action button via XPath
-        cancel_xpath = (
-            f'(//*[@class="je-ready"])[{self._editor_level + 1}]'
-            '/ancestor::*[contains(@class,"oo-ui-window-content")]'
-            '//*[contains(@class,"oo-ui-processDialog-actions-safe")]'
-            '//*[contains(@class,"oo-ui-buttonElement-button")]'
-        )
-        self.scroll_and_click((By.XPATH, cancel_xpath))
-
-        # Wait for the current editor to disappear
         if self._editor_id is None:
             msg = "No editor is open (editor_id is None)."
             raise RuntimeError(msg)
-        self.wait_for_invisible((By.ID, self._editor_id), timeout=10)
+
+        modal_id = f"dataEditorModal_{self._editor_id}"
+        close_locator = (By.CSS_SELECTOR, f"#{modal_id} .modal-header .btn-close")
+        self.scroll_and_click(close_locator)
+
+        # Wait for the modal to close
+        self.wait_for_invisible((By.ID, modal_id), timeout=10)
         self._decrement_editor_level()
         self.wait(1)
 

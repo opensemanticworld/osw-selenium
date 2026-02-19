@@ -69,6 +69,20 @@ src/osw_selenium/
     └── json_editor.py   # JsonEditorPage — editor-level state machine, form CRUD operations
 ```
 
+```text
+docs/
+├── conf.py              # Sphinx config — furo theme, sphinx-design, sphinxcontrib-mermaid
+├── index.md             # Landing page with feature grid, badges, and navigation cards
+├── getting-started.md   # Installation and basic usage with tabbed code blocks
+├── configuration.md     # Env vars, browser setup, CI pipeline configs (tabbed)
+├── architecture.md      # Class hierarchy, state machine, schema path Mermaid diagrams
+├── concepts.md          # Page Object pattern, editor levels, fixture design
+├── examples.md          # Runnable scripts with cross-references
+├── _static/
+│   └── custom.css       # Custom CSS for cards, admonitions, and code blocks
+└── api/                 # 6 API reference pages (autodoc with intro paragraphs)
+```
+
 - **Page Object pattern**: each OSL UI area is a class inheriting from `BasePage`
 - **Editor-level state**: `JsonEditorPage` tracks nested inline editors via `_editor_level` / `_editor_id` — opening an inline form increments the level, saving/cancelling decrements it
 - **Schema paths**: fields are addressed as dot-separated paths (e.g. `root.label.0.text`) and converted to form `name` attributes (`root[label][0][text]`) internally via `utils.py`
