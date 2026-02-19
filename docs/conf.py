@@ -34,6 +34,18 @@ html_theme_options = {
         "color-brand-content": "#82b1ff",
     },
     "navigation_with_keys": True,
+    "sidebar_hide_name": True,
+}
+
+# Show section headings in sidebar for each page
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/scroll-end.html",
+    ],
 }
 
 # -- MyST parser settings ----------------------------------------------------
@@ -42,6 +54,7 @@ myst_enable_extensions = [
     "colon_fence",
     "fieldlist",
 ]
+myst_heading_anchors = 3
 
 # -- Intersphinx settings ----------------------------------------------------
 

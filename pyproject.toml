@@ -1,12 +1,13 @@
 [project]
 name = "osw-selenium"
 version = "0.0.1"
-description = "#UI testing package for OpenSemanticWorld based on selenium and python."
+description = "UI testing package for OpenSemanticWorld based on Selenium and Python."
+dependencies = ["selenium>=4.6.0", "python-dotenv>=1.0.0"]
 authors = [
     { name = "Andreas Raeder", email = "andreas.raeder@isc.fraunhofer.de" },
 ]
 readme = "README.md"
-keywords = ['python']
+keywords = ['python', 'selenium', 'testing', 'opensemantic']
 requires-python = ">=3.10,<4.0"
 classifiers = [
     "Intended Audience :: Developers",
@@ -54,6 +55,9 @@ python-version = "3.10"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "integration: tests that require a running OSW instance (MW_SITE_SERVER)",
+]
 
 [tool.ruff]
 target-version = "py310"
@@ -102,7 +106,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
+"tests/*" = ["S101", "S105", "S106", "TRY003"]
 
 [tool.ruff.format]
 preview = true

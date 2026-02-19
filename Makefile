@@ -46,6 +46,11 @@ docs-test: ## Test if documentation can be built without warnings or errors
 docs: ## Build and serve the documentation
 	@uv run sphinx-autobuild docs docs/_build/html
 
+.PHONY: docs-build
+docs-build: ## Build the documentation once (no server)
+	@echo "🚀 Building documentation"
+	@uv run sphinx-build -b html docs docs/_build/html
+
 .PHONY: help
 help:
 	@uv run python -c "import re; \
